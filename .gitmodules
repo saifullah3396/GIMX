@@ -27,7 +27,7 @@
 	url = https://github.com/matlo/gimxuhid.git
 [submodule "shared/gimxcommon"]
 	path = shared/gimxcommon
-	url = https://github.com/matlo/gimxcommon.git
+	url = https://github.com/saifullah3396/gimxcommon.git
 [submodule "shared/gimx-network-protocol"]
 	path = shared/gimx-network-protocol
 	url = https://github.com/matlo/gimx-network-protocol.git
