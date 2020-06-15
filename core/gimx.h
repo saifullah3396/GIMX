@@ -82,6 +82,7 @@ typedef struct
   int window_events;
   int network_input;
   int prioritize_network_input;
+  int broadcast_controller_report;
   int btstack;
   char * logfilename;
   FILE * logfile;
