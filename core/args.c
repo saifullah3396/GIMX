@@ -464,6 +464,9 @@ int args_read(int argc, char *argv[], s_gimx_params* params)
     }
   }
 
+  // set broadcast to true
+  params->broadcast_controller_report = 1;
+
   if(params->status || params->logfilename)
     params->curses = 0;
 
