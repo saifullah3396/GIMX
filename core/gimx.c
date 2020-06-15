@@ -109,7 +109,7 @@ int ignore_event(GE_Event* event __attribute__((unused)))
 
 int process_event(GE_Event* event)
 {
-  if (!gimx_params.config_file || get_done())
+  if (!gimx_params.config_file || gimx_params.prioritize_network_input == 1 || get_done())
   {
     return 0;
   }
