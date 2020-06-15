@@ -332,6 +332,18 @@ static int network_read_callback(void * user, const void * buf, int status, stru
   uint8_t type = ((uint8_t *)buf)[0];
   switch(type)
   {
+  case E_NETWORK_PACKET_NETWORK_OVERRIDE:
+    {
+      // check for network override packet
+      s_network_packet_network_override * network_override = (s_network_packet_network_override *) buf;
+      if ((unsigned int) status == sizeof(*network_override)) {
+        gimx_params.prioritize_network_input = network_override->value;
+      } else {
+        gwarn("%s: wrong packet size: %u %zu\n", __func__, status, sizeof(* network_override));
+        return 0;
+      }
+    }
+    break;
   case E_NETWORK_PACKET_CONTROLLER:
     {
       // send the answer
@@ -349,6 +361,13 @@ static int network_read_callback(void * user, const void * buf, int status, stru
     break;
   case E_NETWORK_PACKET_IN_REPORT:
     {
+      // check for network override packet
+      s_network_packet_network_override * network_override = (s_network_packet_network_override *) buf;
+      if ((unsigned int) status == sizeof(*network_override)) {
+        gimx_params.prioritize_network_input = network_override->value;
+        return 0;
+      }
+
       s_network_packet_in_report * report = (s_network_packet_in_report *) buf;
       if((unsigned int) status != sizeof(* report) + report->nbAxes * sizeof(* report->axes))
       {
@@ -579,7 +598,7 @@ static int adapter_serial_read_cb(void * user, const void * buf, int status) {
   }
 
   int ret = 0;
-  
+
   if(adapters[adapter].serial.bread + status < sizeof(s_packet)) {
     memcpy((unsigned char *)&adapters[adapter].serial.packet + adapters[adapter].serial.bread, buf, status);
     adapters[adapter].serial.bread += status;
