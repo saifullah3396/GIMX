@@ -11,12 +11,16 @@
 #include <gimx.h>
 #include <gimxusb/include/gusb.h>
 #include <gimxtime/include/gtime.h>
-
+#include <gimxudp/include/gudp.h>
+#include <unistd.h>
+#include <arpa/inet.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
 #define REPORTS_MAX 2
+#define DEFAULT_USB_BROADCAST_IP "127.0.0.1"
+#define DEFAULT_USB_BROADCAST_PORT 51915
 
 static struct
 {
@@ -384,6 +388,9 @@ static struct usb_state {
   unsigned char disconnected;
 } usb_states[MAX_CONTROLLERS];
 
+static struct gudp_socket* broadcast_socket;
+static struct gudp_address broadcast_address;
+
 static void dump(unsigned char * packet, unsigned char length)
 {
   int i;
@@ -533,6 +540,11 @@ static int usb_read_callback(void * user, unsigned char endpoint, const void * b
     }
 
   } else {
+    if (gimx_params.broadcast_controller_report == 1) { // broadcast controller report
+        if (gudp_send(broadcast_socket, buf, status, broadcast_address) < 0) {
+            PRINT_ERROR_OTHER("no bytes sent to broadcast listener");
+        }
+    }
 
     if (status > controller[state->type][state->index].endpoints.in.size) {
       PRINT_ERROR_OTHER("too many bytes transfered");
@@ -578,6 +590,21 @@ static int usb_close_callback(void * user __attribute__((unused))) {
   // TODO MLA: anything to do here?
 
   return 1;
+}
+static int broadcast_read_callback(void * user, const void * buf, int status, struct gudp_address address)
+{
+  // do nothing
+  return (gimx_params.clock_source == CLOCK_INPUT);
+}
+
+static int broadcast_close_callback()
+{
+  if (gimx_params.broadcast_controller_report && broadcast_socket != NULL)
+  {
+    gudp_close(broadcast_socket);
+    broadcast_socket = NULL;
+  }
+  return 0;
 }
 
 static int usb_send_interrupt_out_sync(int usb_number, unsigned char * buf, unsigned int count) {
@@ -691,6 +718,52 @@ int usb_init(int usb_number, e_controller_type type) {
 
   for(i = 0; i < controller[state->type][state->index].endpoints.in.reports.nb; ++i) {
     usb_states[usb_number].reports[i].report_id = controller[state->type][state->index].endpoints.in.reports.elements[i].report_id;
+  }
+
+  if (gimx_params.broadcast_controller_report == 1) {
+      inet_pton(AF_INET, DEFAULT_USB_BROADCAST_IP, &(broadcast_address.ip));
+      broadcast_address.port = DEFAULT_USB_BROADCAST_PORT;
+      broadcast_socket = gudp_open(GUDP_MODE_CLIENT, broadcast_address);
+      if(broadcast_socket == NULL)
+      {
+        gerror(_("failed to broadcast on network : %s:%d.\n"), gudp_ip_str(broadcast_address.ip), broadcast_address.port);
+        ret = -1;
+      } else {
+        unsigned char request[] = { E_NETWORK_PACKET_BROADCAST_RES };
+        if (gudp_send(broadcast_socket, request, sizeof(request), broadcast_address) == -1)
+        {
+          ret = E_GIMX_STATUS_GENERIC_ERROR;
+        }
+
+        if (ret == E_GIMX_STATUS_SUCCESS)
+        {
+          s_network_packet_broadcast_res res_packet;
+          struct gudp_address address = { 0, 0 };
+          int res = gudp_recv(broadcast_socket, &res_packet, sizeof(res), 2000, &address);
+          if (res == (int) sizeof(res_packet))
+          {
+            ginfo(_("server detected for broadcasting controller input.\n"));
+            GUDP_CALLBACKS callbacks = {
+                .fp_read = broadcast_read_callback,
+                .fp_close = broadcast_close_callback,
+                .fp_register = gpoll_register_fd,
+                .fp_remove = gpoll_remove_fd,
+            };
+            if (gudp_register(broadcast_socket, (void *)(intptr_t) i, &callbacks) < 0)
+            {
+              gerror(_("failed to register event source.\n"));
+              ret = -1;
+            }
+          }
+          else if (res > 0)
+          {
+            gerror("invalid reply from broadcast listener.\n", res);
+          } else {
+            gerror("no server listening to broadcaster.\n", res);
+            broadcast_close_callback();
+          }
+        }
+      }
   }
 
   return 0;
