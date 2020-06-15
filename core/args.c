@@ -211,7 +211,7 @@ int args_read(int argc, char *argv[], s_gimx_params* params)
     {"show-debug-flags", no_argument, 0, 'z'},
     {0, 0, 0, 0}
   };
-  
+
   while (1)
   {
     /* getopt_long stores the option index here. */
@@ -347,6 +347,7 @@ int args_read(int argc, char *argv[], s_gimx_params* params)
             adapter_get(controller)->src = address;
             input = 1;
             params->network_input = 1;
+            params->prioritize_network_input = 0;
           }
           else
           {
