@@ -81,6 +81,7 @@ typedef struct
   int subpositions;
   int window_events;
   int network_input;
+  int prioritize_network_input;
   int btstack;
   char * logfilename;
   FILE * logfile;
