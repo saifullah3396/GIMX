@@ -540,12 +540,6 @@ static int usb_read_callback(void * user, unsigned char endpoint, const void * b
     }
 
   } else {
-    if (gimx_params.broadcast_controller_report == 1) { // broadcast controller report
-        if (gudp_send(broadcast_socket, buf, status, broadcast_address) < 0) {
-            PRINT_ERROR_OTHER("no bytes sent to broadcast listener");
-        }
-    }
-
     if (status > controller[state->type][state->index].endpoints.in.size) {
       PRINT_ERROR_OTHER("too many bytes transfered");
       return -1;
@@ -729,7 +723,7 @@ int usb_init(int usb_number, e_controller_type type) {
       inet_pton(AF_INET, DEFAULT_USB_BROADCAST_IP, &(broadcast_address.ip));
       broadcast_address.port = DEFAULT_USB_BROADCAST_PORT;
       broadcast_socket = gudp_open(GUDP_MODE_CLIENT, broadcast_address);
-      if(broadcast_socket == NULL)
+      if (broadcast_socket == NULL)
       {
         gerror(_("failed to broadcast on network : %s:%d.\n"), gudp_ip_str(broadcast_address.ip), broadcast_address.port);
         ret = -1;
@@ -765,7 +759,6 @@ int usb_init(int usb_number, e_controller_type type) {
             gerror("invalid reply from broadcast listener.\n", res);
           } else {
             gerror("no server listening to broadcaster.\n", res);
-            broadcast_close_callback();
           }
         }
       }
