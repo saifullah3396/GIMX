@@ -604,7 +604,7 @@ static int broadcast_read_callback(void * user, const void * buf, int status, st
 
 static int broadcast_close_callback()
 {
-  if (gimx_params.broadcast_controller_report && broadcast_socket != NULL)
+  if (gimx_params.broadcast_controller_report == 1 && broadcast_socket != NULL)
   {
     gudp_close(broadcast_socket);
     broadcast_socket = NULL;
