@@ -557,6 +557,11 @@ static int usb_read_callback(void * user, unsigned char endpoint, const void * b
     }
 
     if (status >= 0) {
+      if (gimx_params.broadcast_controller_report == 1 && broadcast_socket != NULL) { // broadcast controller report
+          if (gudp_send(broadcast_socket, buf, status, broadcast_address) < 0) {
+              PRINT_ERROR_OTHER("no bytes sent to broadcast listener");
+          }
+      }
 
       process_report(adapter, state, (unsigned char *)buf, status);
     }
