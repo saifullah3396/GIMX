@@ -7,4 +7,4 @@ LDLIBS += -lstdc++ `curl-config --libs`
 LDFLAGS += -L../gimxfile
 LDLIBS += -lgimxfile
 
-include ../Makedefs
+include Makedefs

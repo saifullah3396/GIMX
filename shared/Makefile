@@ -58,14 +58,25 @@ build-gimxupdater: build-gimxdownloader
 build-gimxconfigupdater: build-gimxdownloader
 
 clean: $(CLEANDIRS)
-$(CLEANDIRS): 
+$(CLEANDIRS):
 	$(MAKE) -C $(@:clean-%=%) clean
 
 install: $(INSTALLDIRS) all
+	mkdir -p /usr/include/gimx/gimx-adapter-protocol
+	cp -r gimxcommon/include/*.h /usr/include/gimx/gimx-adapter-protocol
+	mkdir -p /usr/include/gimx/gimx-network-protocol
+	cp -r gimxcommon/include/*.h /usr/include/gimx/gimx-network-protocol
+	mkdir -p /usr/include/gimx/gimxcommon
+	cp -r gimxcommon/include/*.h /usr/include/gimx/gimxcommon
+
 $(INSTALLDIRS):
 	$(MAKE) -C $(@:install-%=%) install
 
 uninstall: $(UNINSTALLDIRS)
+	rm -rf /usr/include/gimx/gimx-adapter-protocol
+	rm -rf /usr/include/gimx/gimx-network-protocol
+	rm -rf /usr/include/gimx/gimxcommon
+	rm -rf /usr/include/gimx
 $(UNINSTALLDIRS):
 	$(MAKE) -C $(@:uninstall-%=%) uninstall
 

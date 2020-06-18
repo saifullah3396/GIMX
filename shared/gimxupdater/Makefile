@@ -12,4 +12,4 @@ LDLIBS += -lgimxfile
 LDFLAGS += -L../gimxdownloader
 LDLIBS += -lgimxdownloader
 
-include ../Makedefs
+include Makedefs

@@ -21,7 +21,7 @@ build-launcher: build-shared
 build-fpsconfig: build-shared
 
 clean: $(CLEANDIRS)
-$(CLEANDIRS): 
+$(CLEANDIRS):
 	$(MAKE) -C $(@:clean-%=%) clean
 
 ifeq ($(OS),Windows_NT)

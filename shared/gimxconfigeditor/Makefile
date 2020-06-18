@@ -14,4 +14,4 @@ LDLIBS += -lgimxuhid
 endif
 endif
 
-include ../Makedefs
+include Makedefs
