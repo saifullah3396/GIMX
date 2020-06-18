@@ -75,6 +75,7 @@ $(INSTALLDIRS):
 	$(MAKE) -C $(@:install-%=%) install
 
 uninstall: $(UNINSTALLDIRS)
+	rm -rf /usr/include/gimx/core
 $(UNINSTALLDIRS):
 	$(MAKE) -C $(@:uninstall-%=%) uninstall
 
