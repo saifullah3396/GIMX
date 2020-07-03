@@ -349,13 +349,6 @@ static int network_read_callback(void * user, const void * buf, int status, stru
     break;
   case E_NETWORK_PACKET_IN_REPORT:
     {
-      // check for network override packet
-      s_network_packet_network_override * network_override = (s_network_packet_network_override *) buf;
-      if ((unsigned int) status == sizeof(*network_override)) {
-        gimx_params.prioritize_network_input = network_override->value;
-        return 0;
-      }
-
       s_network_packet_in_report * report = (s_network_packet_in_report *) buf;
       if((unsigned int) status != sizeof(* report) + report->nbAxes * sizeof(* report->axes))
       {
