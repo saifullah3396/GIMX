@@ -70,7 +70,7 @@ else
 
 install: $(INSTALLDIRS) all
 	mkdir -p /usr/include/gimx/core
-	find core/ -name '*.h' | cpio -pdm /usr/include/gimx
+	find core/ -name '*.h' | cpio -pdmu /usr/include/gimx
 $(INSTALLDIRS):
 	$(MAKE) -C $(@:install-%=%) install
 
