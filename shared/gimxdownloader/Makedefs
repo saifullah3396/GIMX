@@ -25,7 +25,7 @@ CFLAGS += -DGLOG_NAME=$(NAME)
 CXXFLAGS += -DGLOG_NAME=$(NAME)
 
 INCLUDES=./*.h
-includedir=$(prefix)/include/gimx/$(NAME)
+includedir=$(prefix)/include/$(NAME)/include
 $(info $(includedir))
 ifneq ($(OS),Windows_NT)
 LIB=$(LIBNAME).so
