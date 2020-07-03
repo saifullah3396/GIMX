@@ -62,12 +62,12 @@ $(CLEANDIRS):
 	$(MAKE) -C $(@:clean-%=%) clean
 
 install: $(INSTALLDIRS) all
-	mkdir -p /usr/include/gimx/gimx-adapter-protocol
-	cp -r gimxcommon/include/*.h /usr/include/gimx/gimx-adapter-protocol
-	mkdir -p /usr/include/gimx/gimx-network-protocol
-	cp -r gimxcommon/include/*.h /usr/include/gimx/gimx-network-protocol
-	mkdir -p /usr/include/gimx/gimxcommon
-	cp -r gimxcommon/include/*.h /usr/include/gimx/gimxcommon
+	mkdir -p /usr/include/gimx_adapter_protocol/include
+	cp -r gimx-adapter-protocol/include/*.h /usr/include/gimx_adapter_protocol/include
+	mkdir -p /usr/include/gimx_network_protocol/include
+	cp -r gimx-network-protocol/*.h /usr/include/gimx_network_protocol/include
+	mkdir -p /usr/include/gimxcommon/include
+	cp -r gimxcommon/include/*.h /usr/include/gimxcommon/include
 
 $(INSTALLDIRS):
 	$(MAKE) -C $(@:install-%=%) install
