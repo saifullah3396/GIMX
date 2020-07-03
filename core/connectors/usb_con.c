@@ -551,13 +551,29 @@ static int usb_read_callback(void * user, unsigned char endpoint, const void * b
     }
 
     if (status >= 0) {
+      // make a copy of the adapter state ..
+      s_adapter adapter_copy = *adapter_get(adapter);
+      process_report(adapter, state, (unsigned char *)buf, status);
       if (gimx_params.broadcast_controller_report == 1 && broadcast_socket != NULL) { // broadcast controller report
-        if (gudp_send(broadcast_socket, buf, status, broadcast_address) < 0) {
+        s_network_packet_controller_broadcast packet;
+        packet.packet_type = E_NETWORK_PACKET_CONTROLLER_BROADCAST;
+        for (size_t i = 0; i < AXIS_MAX; ++i) {
+            packet.axis[i] = adapter_get(adapter)->axis[i];
+        }
+        if (gudp_send(
+            broadcast_socket,
+            &packet,
+            sizeof(packet),
+            broadcast_address) < 0)
+        {
           PRINT_ERROR_OTHER("no bytes sent to broadcast listener");
         }
       }
 
-      process_report(adapter, state, (unsigned char *)buf, status);
+      if (gimx_params.prioritize_network_input == 1) {
+          // reset adapter state updated from process_report() call
+          *adapter_get(adapter) = adapter_copy;
+      }
     }
   }
 
