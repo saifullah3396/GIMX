@@ -1,7 +1,7 @@
 include ../Makedefs
 
 ifneq ($(OS),Windows_NT)
-prefix=$(DESTDIR)/usr
+prefix=$(DESTDIR)/usr/local
 bindir=$(prefix)/bin
 sharedir=$(prefix)/share
 endif
