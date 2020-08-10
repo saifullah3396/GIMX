@@ -1,7 +1,7 @@
 include ../Makedefs
 
 ifneq ($(OS),Windows_NT)
-prefix=$(DESTDIR)/usr/local
+prefix=$(DESTDIR)/tmp/gimx
 bindir=$(prefix)/bin
 endif
 

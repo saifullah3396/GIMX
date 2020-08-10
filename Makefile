@@ -69,13 +69,13 @@ endif
 else
 
 install: $(INSTALLDIRS) all
-	mkdir -p /usr/local/include/gimx/core
-	find core/ -name '*.h' | cpio -pdmu /usr/local/include/gimx
+	mkdir -p /tmp/gimx/include/gimx/core
+	find core/ -name '*.h' | cpio -pdmu /tmp/gimx/include/gimx
 $(INSTALLDIRS):
 	$(MAKE) -C $(@:install-%=%) install
 
 uninstall: $(UNINSTALLDIRS)
-	rm -rf /usr/local/include/gimx/core
+	rm -rf /tmp/gimx/include/gimx/core
 $(UNINSTALLDIRS):
 	$(MAKE) -C $(@:uninstall-%=%) uninstall
 

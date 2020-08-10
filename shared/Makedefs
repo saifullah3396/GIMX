@@ -1,5 +1,5 @@
 ifneq ($(OS),Windows_NT)
-prefix = $(DESTDIR)/usr/local
+prefix = $(DESTDIR)/tmp/gimx
 exec_prefix = $(prefix)
 libdir = $(exec_prefix)/lib
 endif

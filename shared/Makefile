@@ -62,21 +62,21 @@ $(CLEANDIRS):
 	$(MAKE) -C $(@:clean-%=%) clean
 
 install: $(INSTALLDIRS) all
-	mkdir -p /usr/local/include/gimx_adapter_protocol/include
-	cp -r gimx-adapter-protocol/include/*.h /usr/local/include/gimx_adapter_protocol/include
-	mkdir -p /usr/local/include/gimx_network_protocol/include
-	cp -r gimx-network-protocol/*.h /usr/local/include/gimx_network_protocol/include
-	mkdir -p /usr/local/include/gimxcommon/include
-	cp -r gimxcommon/include/*.h /usr/local/include/gimxcommon/include
+	mkdir -p /tmp/gimx/include/gimx_adapter_protocol/include
+	cp -r gimx-adapter-protocol/include/*.h /tmp/gimx/include/gimx_adapter_protocol/include
+	mkdir -p /tmp/gimx/include/gimx_network_protocol/include
+	cp -r gimx-network-protocol/*.h /tmp/gimx/include/gimx_network_protocol/include
+	mkdir -p /tmp/gimx/include/gimxcommon/include
+	cp -r gimxcommon/include/*.h /tmp/gimx/include/gimxcommon/include
 
 $(INSTALLDIRS):
 	$(MAKE) -C $(@:install-%=%) install
 
 uninstall: $(UNINSTALLDIRS)
-	rm -rf /usr/local/include/gimx/gimx-adapter-protocol
-	rm -rf /usr/local/include/gimx/gimx-network-protocol
-	rm -rf /usr/local/include/gimx/gimxcommon
-	rm -rf /usr/local/include/gimx
+	rm -rf /tmp/gimx/include/gimx/gimx-adapter-protocol
+	rm -rf /tmp/gimx/include/gimx/gimx-network-protocol
+	rm -rf /tmp/gimx/include/gimx/gimxcommon
+	rm -rf /tmp/gimx/include/gimx
 $(UNINSTALLDIRS):
 	$(MAKE) -C $(@:uninstall-%=%) uninstall
 
