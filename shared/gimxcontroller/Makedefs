@@ -1,19 +1,19 @@
 ifneq ($(OS),Windows_NT)
-prefix = $(DESTDIR)/usr
+prefix = $(DESTDIR)/usr/local
 exec_prefix = $(prefix)
 libdir = $(exec_prefix)/lib
 endif
 
 ifneq ($(DEBUG),1)
-CFLAGS += -Wall -Wextra -Werror -O3
-CXXFLAGS += -Wall -Wextra -Werror -O3
+CFLAGS += -Wall -Wextra -Werror -O3 -fPIC
+CXXFLAGS += -Wall -Wextra -Werror -O3 -fPIC
 else
 ifneq ($(OS),Windows_NT)
-CFLAGS += -Wall -Wextra -Werror -O0 -g -fsanitize=address -fno-omit-frame-pointer
-CXXFLAGS += -Wall -Wextra -Werror -O0 -g -fsanitize=address -fno-omit-frame-pointer
+CFLAGS += -Wall -Wextra -Werror -O0 -g -fsanitize=address -fno-omit-frame-pointer -fPIC
+CXXFLAGS += -Wall -Wextra -Werror -O0 -g -fsanitize=address -fno-omit-frame-pointer -fPIC
 else
-CFLAGS += -Wall -Wextra -Werror -O0 -g -fno-omit-frame-pointer
-CXXFLAGS += -Wall -Wextra -Werror -O0 -g -fno-omit-frame-pointer
+CFLAGS += -Wall -Wextra -Werror -O0 -g -fno-omit-frame-pointer -fPIC
+CXXFLAGS += -Wall -Wextra -Werror -O0 -g -fno-omit-frame-pointer -fPIC
 endif
 endif
 
